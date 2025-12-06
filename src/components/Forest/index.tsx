@@ -1,9 +1,9 @@
 import Tree from "../Tree";
+import { useMemo } from "react";
 
 const randomRange = (min: number, max: number) => Math.random() * (max - min) + min;
 
-// Tạo mảng cây ngẫu nhiên
-const generateTrees = (numTrees = 50, areaSize = 100) => {
+const generateTrees = (numTrees: number, areaSize: number) => {
   const trees: Array<{ position: [number, number, number]; scale: number; rotationY: number }> = [];
   for (let i = 0; i < numTrees; i++) {
     const x = randomRange(-areaSize / 2, areaSize / 2);
@@ -15,8 +15,15 @@ const generateTrees = (numTrees = 50, areaSize = 100) => {
   return trees;
 };
 
-const Forest = ({ numTrees = 50, areaSize = 100 }) => {
-  const trees = generateTrees(numTrees, areaSize);
+interface ForestProps {
+  maxTrees?: number;
+  numVisible?: number;
+  areaSize?: number;
+}
+
+const Forest = ({ maxTrees = 500, numVisible = 100, areaSize = 200 }: ForestProps) => {
+  // Tạo rừng 1 lần
+  const trees = useMemo(() => generateTrees(maxTrees, areaSize), [maxTrees, areaSize]);
 
   return (
     <>
@@ -24,7 +31,8 @@ const Forest = ({ numTrees = 50, areaSize = 100 }) => {
         <group
           key={idx}
           position={tree.position}
-          rotation={[0, tree.rotationY, 0]} 
+          rotation={[0, tree.rotationY, 0]}
+          visible={idx < numVisible} // chỉ hiển thị numVisible cây
         >
           <Tree scale={tree.scale} />
         </group>

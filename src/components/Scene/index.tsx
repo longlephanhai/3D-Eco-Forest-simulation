@@ -23,30 +23,84 @@ const RotatingCube = () => {
 };
 
 const Scene = () => {
+  // Phase 5 + Phase 7 states
   const [cameraMode, setCameraMode] = useState<"orbit" | "fly">("orbit");
+  const [fogEnabled, setFogEnabled] = useState(true);
+  const [numTrees, setNumTrees] = useState(100);
+  const [skyColor, setSkyColor] = useState("#87CEEB");
 
   return (
     <>
-      {/* Nút đổi chế độ */}
-      <div style={{ position: "absolute", top: 20, left: 20, zIndex: 10 }}>
-        <button onClick={() => setCameraMode("orbit")}>Orbit</button>
-        <button onClick={() => setCameraMode("fly")}>Fly</button>
+      {/* UI panel */}
+      <div
+        style={{
+          position: "absolute",
+          top: 20,
+          left: 20,
+          zIndex: 10,
+          backgroundColor: "rgba(255,255,255,0.8)",
+          padding: "10px",
+          borderRadius: "8px",
+        }}
+      >
+        <div>
+          <strong>Camera Mode:</strong>
+          <button onClick={() => setCameraMode("orbit")}>Orbit</button>
+          <button onClick={() => setCameraMode("fly")}>Fly</button>
+        </div>
+
+        <div style={{ marginTop: "10px" }}>
+          <label>
+            <input
+              type="checkbox"
+              checked={fogEnabled}
+              onChange={() => setFogEnabled(!fogEnabled)}
+            />{" "}
+            Fog
+          </label>
+        </div>
+
+        <div style={{ marginTop: "10px" }}>
+          <label>
+            Number of Trees: {numTrees}
+            <input
+              type="range"
+              min={10}
+              max={500}
+              value={numTrees}
+              onChange={(e) => setNumTrees(parseInt(e.target.value))}
+            />
+          </label>
+        </div>
+
+        <div style={{ marginTop: "10px" }}>
+          <label>
+            Sky Color:{" "}
+            <input
+              type="color"
+              value={skyColor}
+              onChange={(e) => setSkyColor(e.target.value)}
+            />
+          </label>
+        </div>
       </div>
 
+      {/* 3D Canvas */}
       <Canvas
         shadows
-        camera={{ position: [150, 120, 150], fov: 60 }} // camera cao & lùi
+        camera={{ position: [200, 150, 200], fov: 60 }}
         style={{ width: "100vw", height: "100vh", display: "block" }}
       >
         {/* Background + Fog */}
-        <color attach="background" args={["#87CEEB"]} />
-        <fog attach="fog" args={["#a0c4ff", 50, 400]} />
+        <color attach="background" args={[skyColor]} />
+        {fogEnabled && <fog attach="fog" args={["#a0c4ff", 50, 500]} />}
 
         {/* Mặt trời */}
         <directionalLight
-          position={[120, 200, 120]}
+          position={[150, 200, 150]}
           intensity={1.2}
           castShadow
+          shadow-radius={4}
           shadow-mapSize-width={2048}
           shadow-mapSize-height={2048}
           shadow-camera-near={0.5}
@@ -56,7 +110,7 @@ const Scene = () => {
           shadow-camera-top={200}
           shadow-camera-bottom={-200}
         />
-        <mesh position={[100, 80, 40]}>
+        <mesh position={[100, 80, 80]}>
           <sphereGeometry args={[40, 32, 32]} />
           <meshBasicMaterial color="yellow" />
         </mesh>
@@ -64,7 +118,7 @@ const Scene = () => {
         {/* Scene Objects */}
         <Terrain />
         <RotatingCube />
-        <Forest numTrees={100} areaSize={200} />
+        <Forest numVisible={numTrees} maxTrees={500} areaSize={200} />
         <Tree position={[5, 0, -5]} scale={1} />
         <Tree position={[-3, 0, 2]} scale={0.8} />
         <Tree position={[0, 0, 0]} scale={1.2} />
