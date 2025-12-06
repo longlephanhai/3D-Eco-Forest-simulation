@@ -5,12 +5,14 @@ import Terrain from "../Terrain";
 import Forest from "../Forest";
 import Mountain from "../Mountain";
 import River from "../River";
+import Celestial from "../Celestial";
 
 const Scene = () => {
   const [cameraMode, setCameraMode] = useState<"orbit" | "fly">("orbit");
   const [fogEnabled, setFogEnabled] = useState(true);
   const [numTrees, setNumTrees] = useState(100);
   const [skyColor, setSkyColor] = useState("#87CEEB");
+
 
   return (
     <>
@@ -46,11 +48,8 @@ const Scene = () => {
         {fogEnabled && <fog attach="fog" args={["#a0c4ff", 50, 500]} />}
 
         {/* Sun */}
-        <directionalLight position={[150, 200, 150]} intensity={1.2} castShadow shadow-mapSize-width={2048} shadow-mapSize-height={2048} />
-        <mesh position={[100, 80, 80]}>
-          <sphereGeometry args={[40, 32, 32]} />
-          <meshBasicMaterial color="yellow" />
-        </mesh>
+        <Celestial setSkyColor={setSkyColor} />
+
 
         {/* Scene Objects */}
         <Terrain />

@@ -14,33 +14,37 @@ interface RiverProps {
 const River = ({
   width = 5,
   length = 400,
-  segments = 200,
+  segments = 400,
   color = "#1E90FF",
 }: RiverProps) => {
   const geometry = useMemo(() => {
-    const geom = new THREE.PlaneGeometry(length, width, segments, 1);
+    // Tăng segments theo chiều rộng để uốn ngoằn ngoèo đẹp hơn
+    const widthSegments = Math.max(2, Math.floor(segments / 20));
+    const geom = new THREE.PlaneGeometry(length, width, segments, widthSegments);
     geom.rotateX(-Math.PI / 2);
 
     const vertices = geom.attributes.position;
 
     for (let i = 0; i < vertices.count; i++) {
-      const x = vertices.getX(i); // trục dài
-      const z = vertices.getZ(i); // trục ngang
-      const row = i % (segments + 1); // vị trí ngang
+      const x = vertices.getX(i);
+      const z = vertices.getZ(i);
 
-      // offset theo noise để sông ngoằn ngoèo
-      const zOffset = noise.noise(x / 50, 0) * 5; // điều chỉnh 5 để rộng cong
-      const yBase = 0.05; // nhấp nhô nhẹ
-      const yNoise = noise.noise(x / 30, z / 10) * 0.2;
+      // Uốn ngoằn ngoèo theo chiều dài và chiều rộng
+      const bendX = Math.sin(x / 40 + z / 10) * 2; // bẻ ngang theo x
+      const bendZ = Math.sin(x / 50) * 1.5; // uốn nhẹ theo z
 
-      vertices.setZ(i, z + zOffset); // dịch z
-      vertices.setY(i, yBase + yNoise); // cao độ
+      // Sóng nước + noise
+      const yBase = Math.sin(x / 20) * 0.2;
+      const yNoise = noise.noise(x / 30, z / 30) * 0.3;
+
+      vertices.setX(i, x + bendX);
+      vertices.setZ(i, z + bendZ);
+      vertices.setY(i, yBase + yNoise);
     }
 
     geom.computeVertexNormals();
     return geom;
   }, [width, length, segments]);
-
 
   return (
     <mesh geometry={geometry} position={[0, 0.05, 0]} receiveShadow>

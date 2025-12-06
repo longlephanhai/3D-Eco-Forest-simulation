@@ -1,4 +1,3 @@
-
 import { useMemo } from "react";
 import Tree from "../Tree";
 
@@ -16,8 +15,7 @@ const generateTrees = (numTrees: number, areaSize: number) => {
     const x = randomRange(-areaSize / 2, areaSize / 2);
     const z = randomRange(-areaSize / 2, areaSize / 2);
     const scale = randomRange(0.8, 1.5);
-    const rotationY = randomRange(0, Math.PI * 2);
-    trees.push({ position: [x, 0, z] as [number, number, number], scale, rotationY });
+    trees.push({ position: [x, 0, z] as [number, number, number], scale });
   }
   return trees;
 };
@@ -27,10 +25,8 @@ const Forest = ({ maxTrees = 500, numVisible = 100, areaSize = 200 }: ForestProp
 
   return (
     <>
-      {trees.map((tree, idx) => (
-        <group key={idx} position={tree.position} rotation={[0, tree.rotationY, 0]} visible={idx < numVisible}>
-          <Tree scale={tree.scale} />
-        </group>
+      {trees.slice(0, numVisible).map((tree, idx) => (
+        <Tree key={idx} position={tree.position} scale={tree.scale} />
       ))}
     </>
   );
