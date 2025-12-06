@@ -2,9 +2,9 @@ import { Canvas } from "@react-three/fiber";
 import { OrbitControls, FlyControls } from "@react-three/drei";
 import { useState } from "react";
 import Terrain from "../Terrain";
-import RotatingCube from "../RotatingCube";
 import Forest from "../Forest";
 import Mountain from "../Mountain";
+import River from "../River";
 
 const Scene = () => {
   const [cameraMode, setCameraMode] = useState<"orbit" | "fly">("orbit");
@@ -54,7 +54,7 @@ const Scene = () => {
 
         {/* Scene Objects */}
         <Terrain />
-        <RotatingCube />
+        <River width={6} length={400} />
         <Forest numVisible={numTrees} maxTrees={500} areaSize={200} />
         <Mountain position={[50, 0, -50]} scale={20} />
         <Mountain position={[-80, 0, 70]} scale={30} />

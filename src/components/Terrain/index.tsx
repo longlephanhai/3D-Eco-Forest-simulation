@@ -4,12 +4,17 @@ import { SimplexNoise } from "three/examples/jsm/math/SimplexNoise.js";
 
 const noise = new SimplexNoise();
 
-interface TerrainProps {
+export interface TerrainProps {
   size?: number;
   segments?: number;
-  heightScale?: number;      // độ cao đồi
-  mountainCount?: number;    // số núi nhọn
-  mountainHeight?: number;   // độ cao núi
+  heightScale?: number;
+  mountainCount?: number;
+  mountainHeight?: number;
+}
+
+export interface TerrainData {
+  mountainPositions: [number, number][];
+  getHeight: (x: number, z: number) => number;
 }
 
 const Terrain = ({
@@ -22,36 +27,34 @@ const Terrain = ({
   const geometry = useMemo(() => {
     const geom = new THREE.PlaneGeometry(size, size, segments, segments);
     geom.rotateX(-Math.PI / 2);
-
     const vertices = geom.attributes.position;
 
     // random các tọa độ núi
-    const mountainPositions = [];
+    const mountainPositions: [number, number][] = [];
     for (let i = 0; i < mountainCount; i++) {
       const mx = Math.random() * size - size / 2;
       const mz = Math.random() * size - size / 2;
       mountainPositions.push([mx, mz]);
     }
 
-    for (let i = 0; i < vertices.count; i++) {
-      const x = vertices.getX(i);
-      const z = vertices.getZ(i);
-
-      // đồi mềm
+    const getHeight = (x: number, z: number) => {
       let y = noise.noise(x / 50, z / 50) * heightScale;
-
-      // cộng núi
       mountainPositions.forEach(([mx, mz]) => {
         const dx = x - mx;
         const dz = z - mz;
         const dist = Math.sqrt(dx * dx + dz * dz);
-        const radius = 20 + Math.random() * 30; // bán kính núi
+        const radius = 20 + Math.random() * 30;
         if (dist < radius) {
-          const peak = mountainHeight * (1 - dist / radius);
-          y += peak;
+          y += mountainHeight * (1 - dist / radius);
         }
       });
+      return y;
+    };
 
+    for (let i = 0; i < vertices.count; i++) {
+      const x = vertices.getX(i);
+      const z = vertices.getZ(i);
+      const y = getHeight(x, z);
       vertices.setY(i, y);
     }
 
