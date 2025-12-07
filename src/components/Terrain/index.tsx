@@ -10,7 +10,7 @@ export interface TerrainProps {
   heightScale?: number;
   mountainCount?: number;
   mountainHeight?: number;
-  groundColor?: string;          // ⭐ thêm
+  groundColor?: string;         
 }
 
 const Terrain = ({
@@ -19,7 +19,7 @@ const Terrain = ({
   heightScale = 15,
   mountainCount = 5,
   mountainHeight = 50,
-  groundColor = "#556B2F",       // ⭐ mặc định
+  groundColor = "#556B2F",       
 }: TerrainProps) => {
   const geometry = useMemo(() => {
     const geom = new THREE.PlaneGeometry(size, size, segments, segments);
@@ -60,7 +60,7 @@ const Terrain = ({
 
   return (
     <mesh geometry={geometry} receiveShadow>
-      <meshStandardMaterial color={groundColor} /> {/* ⭐ màu tùy mùa */}
+      <meshStandardMaterial color={groundColor} /> 
     </mesh>
   );
 };

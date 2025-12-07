@@ -21,7 +21,7 @@ const generateTrees = (numTrees: number, areaSize: number) => {
   return trees;
 };
 
-const Forest = ({ maxTrees = 500, numVisible = 100, areaSize = 200, leafColor = "#228B22" }: ForestProps) => {
+const Forest = ({ maxTrees = 500, numVisible = 100, areaSize = 400, leafColor = "#228B22" }: ForestProps) => {
   const trees = useMemo(
     () => generateTrees(maxTrees, areaSize),
     [maxTrees, areaSize]

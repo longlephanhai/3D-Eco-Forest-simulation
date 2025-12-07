@@ -44,12 +44,6 @@ const Scene = () => {
 
   const { season, nextDay } = useSeason();
 
-  const seasonColors: Record<string, string> = {
-    spring: "#b3ffcc",
-    summer: "#87CEEB",
-    autumn: "#ffdd99",
-    winter: "#d0e8f2",
-  };
 
   return (
     <>
