@@ -10,11 +10,7 @@ export interface TerrainProps {
   heightScale?: number;
   mountainCount?: number;
   mountainHeight?: number;
-}
-
-export interface TerrainData {
-  mountainPositions: [number, number][];
-  getHeight: (x: number, z: number) => number;
+  groundColor?: string;          // ⭐ thêm
 }
 
 const Terrain = ({
@@ -23,13 +19,13 @@ const Terrain = ({
   heightScale = 15,
   mountainCount = 5,
   mountainHeight = 50,
+  groundColor = "#556B2F",       // ⭐ mặc định
 }: TerrainProps) => {
   const geometry = useMemo(() => {
     const geom = new THREE.PlaneGeometry(size, size, segments, segments);
     geom.rotateX(-Math.PI / 2);
     const vertices = geom.attributes.position;
 
-    // random các tọa độ núi
     const mountainPositions: [number, number][] = [];
     for (let i = 0; i < mountainCount; i++) {
       const mx = Math.random() * size - size / 2;
@@ -64,7 +60,7 @@ const Terrain = ({
 
   return (
     <mesh geometry={geometry} receiveShadow>
-      <meshStandardMaterial color="#556B2F" />
+      <meshStandardMaterial color={groundColor} /> {/* ⭐ màu tùy mùa */}
     </mesh>
   );
 };

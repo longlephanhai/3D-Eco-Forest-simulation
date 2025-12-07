@@ -4,9 +4,10 @@ import type { Group } from "three";
 interface TreeProps {
   position?: [number, number, number];
   scale?: number;
+  leafColor?: string;   // ⭐ thêm vào
 }
 
-const Tree = ({ position = [0, 0, 0], scale = 1 }: TreeProps) => {
+const Tree = ({ position = [0, 0, 0], scale = 1, leafColor = "#228B22" }: TreeProps) => {
   const groupRef = useRef<Group>(null);
 
   const trunkHeight = 2 * scale;
@@ -22,10 +23,10 @@ const Tree = ({ position = [0, 0, 0], scale = 1 }: TreeProps) => {
         <meshStandardMaterial color="#8B4513" />
       </mesh>
 
-      {/* Crown */}
+      {/* Crown (lá) */}
       <mesh position={[0, trunkHeight + crownHeight / 2, 0]} castShadow>
         <coneGeometry args={[crownRadius, crownHeight, 16]} />
-        <meshStandardMaterial color="#228B22" />
+        <meshStandardMaterial color={leafColor} />   {/* ⭐ OK */}
       </mesh>
     </group>
   );

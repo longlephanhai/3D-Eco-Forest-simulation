@@ -17,6 +17,31 @@ const Scene = () => {
   const [numTrees, setNumTrees] = useState(100);
   const [skyColor, setSkyColor] = useState("#87CEEB");
 
+  const seasonEffects = {
+    spring: {
+      fog: ["#c8ffd4", 40, 450],          
+      ground: "#6edc7c",                  
+      leaf: "#4ecc4e",                    
+    },
+    summer: {
+      fog: ["#6bb6ff", 80, 600],        
+      ground: "#4b8f3a",                
+      leaf: "#0f6b1f",                 
+    },
+    autumn: {
+      fog: ["#ffcf66", 50, 500],
+      ground: "#d9984f",
+      leaf: "#cc6f1d",
+    },
+    winter: {
+      fog: ["#eaf8ff", 25, 350],
+      ground: "#d8eaf5",
+      leaf: "#f0f0f0",
+    },
+  };
+
+
+
   const { season, nextDay } = useSeason();
 
   const seasonColors: Record<string, string> = {
@@ -81,30 +106,42 @@ const Scene = () => {
         camera={{ position: [200, 150, 200], fov: 60 }}
         style={{ width: "100vw", height: "100vh" }}
       >
-        <color attach="background" args={[seasonColors[season]]} />
-        {fogEnabled && <fog attach="fog" args={["#a0c4ff", 50, 500]} />}
+        {/* ⭐ NỀN TRỜI DÙNG TỪ CELESTIAL */}
+        <color attach="background" args={[skyColor]} />
 
-        {/* Sun & Moon */}
+        {fogEnabled && (
+          <fog
+            attach="fog"
+            args={[
+              seasonEffects[season].fog[0] as string,
+              seasonEffects[season].fog[1] as number,
+              seasonEffects[season].fog[2] as number,
+            ]}
+          />
+        )}
+
         <Celestial setSkyColor={setSkyColor} onCycle={nextDay} />
 
-        {/* Objects */}
-        <Terrain />
+        <Terrain groundColor={seasonEffects[season].ground} />
         <River width={6} length={400} />
-        <Forest numVisible={numTrees} maxTrees={500} areaSize={200} />
+
+        <Forest
+          numVisible={numTrees}
+          maxTrees={500}
+          areaSize={200}
+          leafColor={seasonEffects[season].leaf}
+        />
+
         <Mountain position={[50, 0, -50]} scale={20} />
         <Mountain position={[-80, 0, 70]} scale={30} />
         <Mountain position={[0, 0, 100]} scale={25} />
 
-        {/* Camera */}
         {cameraMode === "orbit" && <OrbitControls />}
         {cameraMode === "fly" && (
-          <FlyControls
-            movementSpeed={10}
-            rollSpeed={Math.PI / 24}
-            dragToLook
-          />
+          <FlyControls movementSpeed={10} rollSpeed={Math.PI / 24} dragToLook />
         )}
       </Canvas>
+
     </>
   );
 };

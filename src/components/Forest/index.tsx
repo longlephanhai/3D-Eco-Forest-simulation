@@ -5,6 +5,7 @@ interface ForestProps {
   maxTrees?: number;
   numVisible?: number;
   areaSize?: number;
+  leafColor?: string;  
 }
 
 const randomRange = (min: number, max: number) => Math.random() * (max - min) + min;
@@ -20,13 +21,16 @@ const generateTrees = (numTrees: number, areaSize: number) => {
   return trees;
 };
 
-const Forest = ({ maxTrees = 500, numVisible = 100, areaSize = 200 }: ForestProps) => {
-  const trees = useMemo(() => generateTrees(maxTrees, areaSize), [maxTrees, areaSize]);
+const Forest = ({ maxTrees = 500, numVisible = 100, areaSize = 200, leafColor = "#228B22" }: ForestProps) => {
+  const trees = useMemo(
+    () => generateTrees(maxTrees, areaSize),
+    [maxTrees, areaSize]
+  );
 
   return (
     <>
       {trees.slice(0, numVisible).map((tree, idx) => (
-        <Tree key={idx} position={tree.position} scale={tree.scale} />
+        <Tree key={idx} position={tree.position} scale={tree.scale} leafColor={leafColor} />
       ))}
     </>
   );
