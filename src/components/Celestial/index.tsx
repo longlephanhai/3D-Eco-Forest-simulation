@@ -147,7 +147,7 @@ const Celestial = ({ setSkyColor, onCycle }: CelestialProps) => {
   }, [onCycle]);
 
   useFrame(({ clock }) => {
-    const t = clock.getElapsedTime() * 0.2;
+    const t = clock.getElapsedTime() * 0.5;
     const angle = t % (Math.PI * 2);
     const crossedZero = prevAngle.current > 5.5 && angle < 0.3;
     if (crossedZero) handleCycle();
